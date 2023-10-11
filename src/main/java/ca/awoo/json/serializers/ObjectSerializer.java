@@ -10,14 +10,37 @@ import ca.awoo.json.Serializer;
 import ca.awoo.json.types.JsonObject;
 import ca.awoo.json.types.JsonValue;
 
+/**
+ * Serializes and deserializes objects.
+ * <p>
+ * This serializer uses reflection to serialize and deserialize objects.
+ * It will serialize all fields of the object, including private and protected fields.
+ * It will not serialize transient or synthetic fields.
+ * </p>
+ * @see Serializer
+ * @see JsonObject
+ */
 public class ObjectSerializer implements Serializer<Object> {
 
     private Json json;
 
+    /**
+     * Creates a new ObjectSerializer with the given {@link Json} instance.
+     * The serializer needs a reference to the containing {@link Json} instance to serialize and deserialize other objects within the object.
+     * @see Json
+     * @param json The {@link Json} instance to use.
+     */
     public ObjectSerializer(Json json) {
         this.json = json;
     }
 
+    /**
+     * Serializes an object into a {@link JsonObject}.
+     * @param obj The object to serialize.
+     * @param clazz The class of the object to serialize.
+     * @return A {@link JsonObject} representing the object.
+     * @throws JsonSerializationException if the object could not be serialized.
+     */
     public JsonValue<?> serialize(Object obj, Class<? extends Object> clazz) throws JsonSerializationException {
         JsonObject json = new JsonObject();
         Field[] fields = clazz.getDeclaredFields();
@@ -40,6 +63,13 @@ public class ObjectSerializer implements Serializer<Object> {
         return json;
     }
 
+    /**
+     * Deserializes a {@link JsonObject} into an object.
+     * @param json The {@link JsonObject} to deserialize.
+     * @param clazz The class of the object to deserialize.
+     * @return An object representing the {@link JsonObject}.
+     * @throws JsonDeserializationException if the {@link JsonValue} could not be deserialized.
+     */
     public Object deserialize(JsonValue<?> json, Class<? extends Object> clazz) throws JsonDeserializationException {
         if(!(json instanceof JsonObject)){
             throw new JsonDeserializationException(json, "Expected JsonObject, got " + json.getClass().getSimpleName());
