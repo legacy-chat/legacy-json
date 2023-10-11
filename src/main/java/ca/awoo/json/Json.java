@@ -35,6 +35,7 @@ public class Json {
         registerSerializer(Float.class, new FloatSerializer());
         registerSerializer(Double.class, new DoubleSerializer());
         registerSerializer(Boolean.class, new BooleanSerializer());
+        registerSerializer(Character.class, new CharacterSerializer());
         registerSerializer(Byte.class, new ByteSerializer());
         registerSerializer(Short.class, new ShortSerializer());
     }
