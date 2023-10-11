@@ -28,7 +28,9 @@ public class JsonObject extends JsonValue<Map<String, JsonValue<?>>> {
         for (String key : value.keySet()) {
             sb.append("\"" + JsonString.escape(key) + "\": " + value.get(key).toString() + ", ");
         }
-        sb.delete(sb.length() - 2, sb.length());
+        if(sb.length() > 1){
+            sb.delete(sb.length() - 2, sb.length());
+        }
         sb.append("}");
         return sb.toString();
     }
