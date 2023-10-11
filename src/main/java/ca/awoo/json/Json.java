@@ -1,7 +1,7 @@
 package ca.awoo.json;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import ca.awoo.json.serializers.*;
 import ca.awoo.json.types.*;
@@ -47,8 +47,26 @@ import ca.awoo.json.types.*;
  * </pre>
  */
 public class Json {
-    private Map<Class<?>, Serializer<?>> serializers = new HashMap<Class<?>, Serializer<?>>();
+    private Set<Pair<ClassMatcher, Serializer<?>>> serializers = new HashSet<Pair<ClassMatcher, Serializer<?>>>();
     private Serializer<?> defaultSerializer = null;
+
+    private Pair<ClassMatcher, Serializer<?>> getSerializerPair(Class<?> clazz) {
+        for (Pair<ClassMatcher, Serializer<?>> pair : serializers) {
+            if (pair.first.matches(clazz)) {
+                return pair;
+            }
+        }
+        return null;
+    }
+
+    private Pair<ClassMatcher, Serializer<?>> getSerializerPair(ClassMatcher matcher){
+        for (Pair<ClassMatcher, Serializer<?>> pair : serializers) {
+            if (pair.first.equals(matcher)) {
+                return pair;
+            }
+        }
+        return null;
+    }
 
     /**
      * Registers a serializer for a specific class. This serializer will be used to serialize and deserialize objects of the specified class. If no serializer is registered for a class, the default serializer will be used.
@@ -59,7 +77,27 @@ public class Json {
      * @param serializer The serializer to use for the specified class
      */
     public <T> void registerSerializer(Class<T> clazz, Serializer<T> serializer) {
-        serializers.put(clazz, serializer);
+        if(getSerializerPair(clazz) != null){
+            throw new RuntimeException("Serializer already registered for " + clazz.getName());
+        }
+        serializers.add(new Pair<ClassMatcher, Serializer<?>>(new SingleClassMatcher(clazz), serializer));
+    }
+
+    /**
+     * Registers a serializer for a specific class matcher.
+     * The class matcher allows for more complex matching of classes than just a single class.
+     * For example, you could register a serializer for all classes that implement a specific interface.
+     * This is used internally to register the serializer for arrays.
+     * @see ClassMatcher
+     * @param <T> The type of the class to register the serializer for
+     * @param matcher The class matcher to register the serializer for
+     * @param serializer The serializer to use for the specified class matcher
+     */
+    public <T> void registerSerializer(ClassMatcher matcher, Serializer<T> serializer) {
+        if(getSerializerPair(matcher) != null){
+            throw new RuntimeException("Serializer already registered for " + matcher);
+        }
+        serializers.add(new Pair<ClassMatcher, Serializer<?>>(matcher, serializer));
     }
 
     /**
@@ -78,8 +116,9 @@ public class Json {
      */
     @SuppressWarnings("unchecked")
     public <T> Serializer<T> getSerializer(Class<T> clazz) {
-        if (serializers.containsKey(clazz)) {
-            return (Serializer<T>) serializers.get(clazz);
+        Pair<ClassMatcher, Serializer<?>> pair = getSerializerPair(clazz);
+        if (pair != null) {
+            return (Serializer<T>) pair.second;
         } else {
             return (Serializer<T>) defaultSerializer;
         }
@@ -99,6 +138,7 @@ public class Json {
         registerSerializer(Character.class, new CharacterSerializer());
         registerSerializer(Byte.class, new ByteSerializer());
         registerSerializer(Short.class, new ShortSerializer());
+        registerSerializer(new ArrayClassMatcher(), new ArraySerializer(this));
     }
 
     /**
