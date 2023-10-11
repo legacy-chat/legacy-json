@@ -18,6 +18,7 @@ public class JsonString extends JsonValue<String>{
         return str;
     }
 
+    @Override
     public String toString() {
         return "\"" + escape(value) + "\"";
     }
