@@ -30,7 +30,13 @@ public class Json {
     public void defaultConfig(){
         registerDefaultSerializer(new ObjectSerializer(this));
         registerSerializer(String.class, new StringSerializer());
+        registerSerializer(Integer.class, new IntegerSerializer());
+        registerSerializer(Long.class, new LongSerializer());
+        registerSerializer(Float.class, new FloatSerializer());
+        registerSerializer(Double.class, new DoubleSerializer());
         registerSerializer(Boolean.class, new BooleanSerializer());
+        registerSerializer(Byte.class, new ByteSerializer());
+        registerSerializer(Short.class, new ShortSerializer());
     }
 
     /**
