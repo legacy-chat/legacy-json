@@ -27,6 +27,9 @@ public class ObjectSerializer implements Serializer<Object> {
             }
             field.setAccessible(true);
             try {
+                if(field.get(obj).equals(obj)){
+                    throw new JsonSerializationException(obj, "Cannot serialize object with circular reference");
+                }
                 json.put(field.getName(), this.json.toJsonValue(field.get(obj), field.getType()));
             } catch (IllegalArgumentException e) {
                 throw new JsonSerializationException(obj, "Error serializing field " + field.getName(), e);
