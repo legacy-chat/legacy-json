@@ -28,26 +28,28 @@ public class Json {
     }
 
     public void defaultConfig(){
+        registerDefaultSerializer(new ObjectSerializer(this));
         registerSerializer(String.class, new StringSerializer());
     }
 
-    private <T> JsonValue<?> toJsonValue(T obj, Class<T> clazz){
+    @SuppressWarnings("unchecked")
+    public <T> JsonValue<?> toJsonValue(T obj, Class<? extends Object> clazz) throws JsonSerializationException{
+        Serializer<T> serializer = (Serializer<T>) getSerializer(clazz);
+        if (serializer == null) {
+            throw new RuntimeException("No serializer found for " + clazz.getName());
+        }
+        return serializer.serialize(obj, (Class<? extends T>) clazz);
+    }
+
+    public <T> T fromJsonValue(JsonValue<?> json, Class<T> clazz) throws JsonDeserializationException{
         Serializer<T> serializer = getSerializer(clazz);
         if (serializer == null) {
             throw new RuntimeException("No serializer found for " + clazz.getName());
         }
-        return serializer.serialize(obj);
+        return serializer.deserialize(json, clazz);
     }
 
-    private <T> T fromJsonValue(JsonValue<?> json, Class<T> clazz) throws JsonDeserializationException{
-        Serializer<T> serializer = getSerializer(clazz);
-        if (serializer == null) {
-            throw new RuntimeException("No serializer found for " + clazz.getName());
-        }
-        return serializer.deserialize(json);
-    }
-
-    public <T> String toJson(T obj, Class<T> clazz){
+    public <T> String toJson(T obj, Class<T> clazz) throws JsonSerializationException{
         return toJsonValue(obj, clazz).toString();
     }
 
