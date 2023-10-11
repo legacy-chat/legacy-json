@@ -6,7 +6,7 @@ public class JsonString extends JsonValue<String>{
         super(value);
     }
 
-    private String escape(String str){
+    public static String escape(String str){
         //Escape characters
         str = str.replace("\\", "\\\\"); //Backslash
         str = str.replace("\"", "\\\""); //Double quote
