@@ -4,6 +4,7 @@ import org.junit.Test;
 
 public class SerializationTest {
 
+    @SuppressWarnings("unused")
     private static class TestClass {
         private int          intfield;
         private String       stringfield;
@@ -73,30 +74,13 @@ public class SerializationTest {
         
     }
 
+    @SuppressWarnings("unused")
     private static class TestClass2 {
         private int aField;
 
         public TestClass2(int aField) {
             this.aField = aField;
         }
-    }
-
-    private static class SmallClass {
-        private String a;
-        private boolean b;
-
-        public SmallClass(String a, boolean b) {
-            this.a = a;
-            this.b = b;
-        }
-    }
-
-    @Test
-    public void test() throws JsonSerializationException {
-        SmallClass sc = new SmallClass("Hello", true);
-        Json json = new Json();
-        json.defaultConfig();
-        System.out.println(json.toJson(sc, SmallClass.class));
     }
 
     @Test
