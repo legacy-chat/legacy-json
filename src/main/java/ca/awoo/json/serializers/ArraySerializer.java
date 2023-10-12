@@ -28,11 +28,11 @@ public class ArraySerializer implements Serializer<Object>{
 
     private Object[] getArray(Object val){
         if (val instanceof Object[])
-        return (Object[])val;
+            return (Object[])val;
         int arrlength = Array.getLength(val);
         Object[] outputArray = new Object[arrlength];
         for(int i = 0; i < arrlength; ++i){
-        outputArray[i] = Array.get(val, i);
+            outputArray[i] = Array.get(val, i);
         }
         return outputArray;
     }
