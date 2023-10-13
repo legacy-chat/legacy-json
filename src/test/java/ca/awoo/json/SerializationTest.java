@@ -199,8 +199,12 @@ public class SerializationTest {
         
     }
 
+    /**
+     * Tests the serialization and deserialization of a complex object
+     * @throws Exception if an error occurs
+     */
     @Test
-    public void serializerComplexObject() throws JsonSerializationException, JsonDeserializationException {
+    public void serializerComplexObject() throws Exception {
         TestClass tc = new TestClass(
             0,
             "Hello",
@@ -233,6 +237,10 @@ public class SerializationTest {
 
     }
     
+    /**
+     * Tests the serialization and deserialization of an int
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testInt() throws Exception {
         Json json = new Json();
@@ -244,6 +252,10 @@ public class SerializationTest {
         assertEquals("Before and after json", 1, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a string
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testString() throws Exception {
         Json json = new Json();
@@ -255,6 +267,10 @@ public class SerializationTest {
         assertEquals("Before and after json", "Hello", i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a boolean
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testBoolean() throws Exception {
         Json json = new Json();
@@ -266,6 +282,10 @@ public class SerializationTest {
         assertEquals("Before and after json", true, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a double
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testDouble() throws Exception {
         Json json = new Json();
@@ -277,6 +297,10 @@ public class SerializationTest {
         assertEquals("Before and after json", 1.0, i, 0.0001);
     }
 
+    /**
+     * Tests the serialization and deserialization of a float
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testFloat() throws Exception {
         Json json = new Json();
@@ -288,6 +312,10 @@ public class SerializationTest {
         assertEquals("Before and after json", 1.0f, i, 0.0001);
     }
 
+    /**
+     * Tests the serialization and deserialization of a long
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testLong() throws Exception {
         Json json = new Json();
@@ -299,6 +327,10 @@ public class SerializationTest {
         assertEquals("Before and after json", 1L, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a short
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testShort() throws Exception {
         Json json = new Json();
@@ -310,6 +342,10 @@ public class SerializationTest {
         assertEquals("Before and after json", (short)1, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a byte
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testByte() throws Exception {
         Json json = new Json();
@@ -321,6 +357,10 @@ public class SerializationTest {
         assertEquals("Before and after json", (byte)1, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a char
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testChar() throws Exception {
         Json json = new Json();
@@ -332,6 +372,10 @@ public class SerializationTest {
         assertEquals("Before and after json", 'a', i);
     }
 
+    /**
+     * Tests the serialization and deserialization of an int array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testIntArray() throws Exception {
         Json json = new Json();
@@ -343,6 +387,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new int[]{1, 2, 3}, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a string array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testStringArray() throws Exception {
         Json json = new Json();
@@ -354,6 +402,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new String[]{"a", "b", "c"}, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a boolean array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testBooleanArray() throws Exception {
         Json json = new Json();
@@ -365,6 +417,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new boolean[]{true, false}, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a double array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testDoubleArray() throws Exception {
         Json json = new Json();
@@ -376,6 +432,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new double[]{1.1, 2.2, 3.3}, i, 0.0001);
     }
 
+    /**
+     * Tests the serialization and deserialization of a float array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testFloatArray() throws Exception {
         Json json = new Json();
@@ -387,6 +447,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new float[]{1.1f, 2.2f, 3.3f}, i, 0.0001f);
     }
 
+    /**
+     * Tests the serialization and deserialization of a long array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testLongArray() throws Exception {
         Json json = new Json();
@@ -398,6 +462,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new long[]{1, 2, 3}, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a short array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testShortArray() throws Exception {
         Json json = new Json();
@@ -409,6 +477,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new short[]{1, 2, 3}, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a byte array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testByteArray() throws Exception {
         Json json = new Json();
@@ -420,6 +492,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new byte[]{1, 2, 3}, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of a char array
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testCharArray() throws Exception {
         Json json = new Json();
@@ -431,6 +507,10 @@ public class SerializationTest {
         assertArrayEquals("Before and after json", new char[]{'a', 'b', 'c'}, i);
     }
 
+    /**
+     * Tests the serialization and deserialization of an object
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testObject() throws Exception {
         Json json = new Json();

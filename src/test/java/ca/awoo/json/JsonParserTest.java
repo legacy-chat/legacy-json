@@ -11,7 +11,14 @@ import ca.awoo.json.types.JsonValue;
 import ca.awoo.praser.Parser.Match;
 import ca.awoo.praser.character.CharacterStream;
 
+/**
+ * Tests for {@link JsonParser}.
+ */
 public class JsonParserTest{
+    /**
+     * Tests that the parser can parse a string.
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testString() throws Exception{
         Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("\"hello\"".getBytes())));
@@ -19,6 +26,10 @@ public class JsonParserTest{
         System.out.println(match.value);
     }
 
+    /**
+     * Tests that the parser can parse a number.
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testNumber() throws Exception{
         Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("76".getBytes())));
@@ -26,6 +37,10 @@ public class JsonParserTest{
         System.out.println(match.value);
     }
 
+    /**
+     * Tests that the parser can parse a boolean.
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testBoolean() throws Exception{
         Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("true".getBytes())));
@@ -33,6 +48,10 @@ public class JsonParserTest{
         System.out.println(match.value);
     }
 
+    /**
+     * Tests that the parser can parse an array.
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testArray() throws Exception{
         Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("[1,2,3]".getBytes())));
@@ -44,6 +63,10 @@ public class JsonParserTest{
         System.out.println(match.value);
     }
 
+    /**
+     * Tests that the parser can parse an object.
+     * @throws Exception if an error occurs
+     */
     @Test
     public void testObject() throws Exception{
         Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("{\"hello\": \"world\"}".getBytes())));
