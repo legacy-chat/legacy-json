@@ -1,10 +1,16 @@
 package ca.awoo.json;
 
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+import ca.awoo.json.parsers.JsonParser;
 import ca.awoo.json.serializers.*;
 import ca.awoo.json.types.*;
+import ca.awoo.praser.ParseException;
+import ca.awoo.praser.Parser.Match;
+import ca.awoo.praser.character.CharacterStream;
 
 /**
  * The main class for the JSON library. This class is used to serialize and deserialize objects to and from JSON.
@@ -50,7 +56,10 @@ public class Json {
     private Set<Pair<ClassMatcher, Serializer<?>>> serializers = new HashSet<Pair<ClassMatcher, Serializer<?>>>();
     private Serializer<?> defaultSerializer = null;
 
+    private JsonParser parser = new JsonParser();
+
     private Pair<ClassMatcher, Serializer<?>> getSerializerPair(Class<?> clazz) {
+        clazz = mikeTyson(clazz);
         for (Pair<ClassMatcher, Serializer<?>> pair : serializers) {
             if (pair.first.matches(clazz)) {
                 return pair;
@@ -203,7 +212,8 @@ public class Json {
         if (serializer == null) {
             throw new RuntimeException("No serializer found for " + clazz.getName());
         }
-        return serializer.deserialize(json, clazz);
+        T obj =  serializer.deserialize(json, clazz);
+        return obj;
     }
 
     /**
@@ -227,8 +237,19 @@ public class Json {
      * @throws JsonDeserializationException If there is an error while converting the JsonValue used internally to an object
      */
     public <T> T fromJson(String json, Class<T> clazz) throws JsonDeserializationException{
-        throw new UnsupportedOperationException("Json parsing not yet implemented");
-        //return fromJsonValue(JsonValue.parse(json), clazz);
+        Match<JsonValue<?>> match;
+        try {
+            match = parser.parse(new CharacterStream(new ByteArrayInputStream(json.getBytes("UTF-8"))));
+            if(!match.isMatch()){
+                throw new JsonDeserializationException(null, "Could not parse JSON: Not valid Json: " + json);
+            }
+            return fromJsonValue(match.value, clazz);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new JsonDeserializationException(null, "Could not parse JSON: Parser threw exception: " + json, e);
+        }
+        
     }
 
 }

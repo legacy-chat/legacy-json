@@ -1,0 +1,55 @@
+package ca.awoo.json;
+
+import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayInputStream;
+
+import org.junit.Test;
+
+import ca.awoo.json.parsers.JsonParser;
+import ca.awoo.json.types.JsonValue;
+import ca.awoo.praser.Parser.Match;
+import ca.awoo.praser.character.CharacterStream;
+
+public class JsonParserTest{
+    @Test
+    public void testString() throws Exception{
+        Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("\"hello\"".getBytes())));
+        assertTrue("Matched on string", match.isMatch());
+        System.out.println(match.value);
+    }
+
+    @Test
+    public void testNumber() throws Exception{
+        Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("76".getBytes())));
+        assertTrue("Matched on number", match.isMatch());
+        System.out.println(match.value);
+    }
+
+    @Test
+    public void testBoolean() throws Exception{
+        Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("true".getBytes())));
+        assertTrue("Matched on boolean", match.isMatch());
+        System.out.println(match.value);
+    }
+
+    @Test
+    public void testArray() throws Exception{
+        Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("[1,2,3]".getBytes())));
+        assertTrue("Matched on array", match.isMatch());
+        System.out.println(match.value);
+
+        match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("[1.0, 2.0, 3.0]".getBytes())));
+        assertTrue("Matched on array", match.isMatch());
+        System.out.println(match.value);
+    }
+
+    @Test
+    public void testObject() throws Exception{
+        Match<JsonValue<?>> match = new JsonParser().parse(new CharacterStream(new ByteArrayInputStream("{\"hello\": \"world\"}".getBytes())));
+        assertTrue("Matched on object", match.isMatch());
+        System.out.println(match.value);
+    }
+
+    
+}

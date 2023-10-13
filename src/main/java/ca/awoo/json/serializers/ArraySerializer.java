@@ -52,9 +52,9 @@ public class ArraySerializer implements Serializer<Object>{
             throw new JsonDeserializationException(json, "Expected JsonArray, got " + json.getClass().getSimpleName());
         }else{
             JsonArray array = (JsonArray)json;
-            Object[] obj = new Object[array.getValue().size()];
+            Object obj = Array.newInstance(clazz.getComponentType(), array.getValue().size());
             for(int i = 0; i < array.getValue().size(); i++){
-                obj[i] = this.json.fromJsonValue(array.getValue().get(i), clazz.getComponentType());
+                Array.set(obj, i, this.json.fromJsonValue(array.getValue().get(i), clazz.getComponentType()));
             }
             return obj;
         }
