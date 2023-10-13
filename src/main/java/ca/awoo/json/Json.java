@@ -185,7 +185,8 @@ public class Json {
         if (serializer == null) {
             throw new RuntimeException("No serializer found for " + clazz.getName());
         }
-        System.out.println("Serializing " + obj.getClass().getName() + " with " + serializer.getClass().getName());
+        //TODO: this is where the logging goes!
+        //System.out.println("Serializing " + obj.getClass().getName() + " with " + serializer.getClass().getName());
         return serializer.serialize(obj, (Class<? extends T>) clazz);
     }
 
