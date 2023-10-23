@@ -148,6 +148,7 @@ public class Json {
         registerSerializer(Byte.class, new ByteSerializer());
         registerSerializer(Short.class, new ShortSerializer());
         registerSerializer(new ArrayClassMatcher(), new ArraySerializer(this));
+        registerSerializer(new CustomSerializationClassMatcher(), new InterfaceSerializer());
     }
 
     /**
