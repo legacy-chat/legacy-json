@@ -32,6 +32,9 @@ import ca.awoo.praser.character.CharacterStream;
  * You should register a custom serializer for any class that has special requirements for how it's serialized.
  * </p>
  * <p>
+ * A class can implement the CustomSerializer interface to serialize and deserialize itself. This can be cleaner than registering a custom serializer with the Json class.
+ * </p>
+ * <p>
  * During deserialization, an object is constructed using the default constructor and then the fields are set using reflection.
  * If you need to do something special during deserialization, you can register a custom serializer.
  * If you're class doesn't have a no-arg constructor, you will need to register a custom serializer for it.

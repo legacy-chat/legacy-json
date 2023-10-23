@@ -6,6 +6,10 @@ import ca.awoo.json.JsonSerializationException;
 import ca.awoo.json.Serializer;
 import ca.awoo.json.types.JsonValue;
 
+/**
+ * Serializes and deserializes {@link CustomSerializer}s
+ * @see CustomSerializer
+ */
 public class InterfaceSerializer implements Serializer<CustomSerializer> {
 
     public JsonValue<?> serialize(CustomSerializer obj, Class<? extends CustomSerializer> clazz)
