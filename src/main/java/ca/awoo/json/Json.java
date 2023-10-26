@@ -1,7 +1,5 @@
 package ca.awoo.json;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +8,7 @@ import ca.awoo.json.serializers.*;
 import ca.awoo.json.types.*;
 import ca.awoo.praser.ParseException;
 import ca.awoo.praser.Parser.Match;
-import ca.awoo.praser.character.CharacterStream;
+import ca.awoo.praser.character.StringCharacterStream;
 
 /**
  * The main class for the JSON library. This class is used to serialize and deserialize objects to and from JSON.
@@ -243,13 +241,11 @@ public class Json {
     public <T> T fromJson(String json, Class<T> clazz) throws JsonDeserializationException{
         Match<JsonValue<?>> match;
         try {
-            match = parser.parse(new CharacterStream(new ByteArrayInputStream(json.getBytes("UTF-8"))));
+            match = parser.parse(new StringCharacterStream(json));
             if(!match.isMatch()){
                 throw new JsonDeserializationException(null, "Could not parse JSON: Not valid Json: " + json);
             }
             return fromJsonValue(match.value, clazz);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
         } catch (ParseException e) {
             throw new JsonDeserializationException(null, "Could not parse JSON: Parser threw exception: " + json, e);
         }
