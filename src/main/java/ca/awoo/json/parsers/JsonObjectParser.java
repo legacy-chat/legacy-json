@@ -8,6 +8,9 @@ import ca.awoo.praser.Parser;
 import ca.awoo.praser.character.SingleCharacterParser;
 import ca.awoo.praser.character.WhitespaceParser;
 
+/**
+ * A parser for {@link JsonObject} objects.
+ */
 public class JsonObjectParser extends Parser<Character, JsonValue<?>> {
 
     private final Parser<Character, Character> openBrace = new SingleCharacterParser('{');
