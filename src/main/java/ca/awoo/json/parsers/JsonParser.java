@@ -15,7 +15,8 @@ public class JsonParser extends Parser<Character, JsonValue<?>> {
         new JsonBooleanParser(),
         new JsonNumberParser(),
         new JsonObjectParser(),
-        new JsonArrayParser()
+        new JsonArrayParser(),
+        new JsonNullParser()
     );
 
     private final Parser<Character, String> whitespaceParser = new WhitespaceParser();
