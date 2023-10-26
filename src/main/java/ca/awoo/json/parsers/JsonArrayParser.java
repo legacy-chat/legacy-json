@@ -6,12 +6,14 @@ import ca.awoo.praser.InputStreamOf;
 import ca.awoo.praser.ParseException;
 import ca.awoo.praser.Parser;
 import ca.awoo.praser.character.SingleCharacterParser;
+import ca.awoo.praser.character.WhitespaceParser;
 
 public class JsonArrayParser extends Parser<Character, JsonValue<?>> {
 
     private final Parser<Character, Character> openBracket = new SingleCharacterParser('[');
     private final Parser<Character, Character> closeBracket = new SingleCharacterParser(']');
     private final Parser<Character, Character> comma = new SingleCharacterParser(',');
+    private final Parser<Character, String> whitespace = new WhitespaceParser();
 
     @Override
     public Match<JsonValue<?>> parse(InputStreamOf<Character> input, int offset) throws ParseException {
@@ -24,7 +26,7 @@ public class JsonArrayParser extends Parser<Character, JsonValue<?>> {
         while(true){
             Match<JsonValue<?>> valueMatch = new JsonParser().parse(input, offset + i);
             if(!valueMatch.isMatch()){
-                return new Match<JsonValue<?>>(null, 0);
+                break;
             }
             i += valueMatch.length;
             jsonArray.add(valueMatch.value);
@@ -35,6 +37,8 @@ public class JsonArrayParser extends Parser<Character, JsonValue<?>> {
                 break;
             }
         }
+        Match<String> whitespaceMatch = whitespace.parse(input, offset + i);
+        i += whitespaceMatch.length;
         Match<Character> closeBracketMatch = closeBracket.parse(input, offset + i);
         if(!closeBracketMatch.isMatch()){
             return new Match<JsonValue<?>>(null, 0);

@@ -1,5 +1,6 @@
 package ca.awoo.json;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -7,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import org.junit.Test;
 
 import ca.awoo.json.parsers.JsonParser;
+import ca.awoo.json.types.JsonObject;
 import ca.awoo.json.types.JsonValue;
 import ca.awoo.praser.Parser.Match;
 import ca.awoo.praser.character.CharacterStream;
@@ -74,5 +76,23 @@ public class JsonParserTest{
         System.out.println(match.value);
     }
 
-    
+    /**
+     * Tests that the parser can parse an empty array.
+     * @throws Exception if an error occurs
+     * @since 0.0.2
+     */
+    @Test
+    public void testEmptyArray() throws Exception {
+        JsonParser parser = new JsonParser();
+        Match<JsonValue<?>> match = parser.parse(new CharacterStream(new ByteArrayInputStream("{\"attachments\": []}".getBytes())));
+        assertTrue("Did match", match.isMatch());
+        assertTrue("Matched on object", match.value instanceof JsonObject);
+    }
+
+    @Test
+    public void testBogusArray() throws Exception {
+        JsonParser parser = new JsonParser();
+        Match<JsonValue<?>> match = parser.parse(new CharacterStream(new ByteArrayInputStream("{\"attachments\": [bogus]}".getBytes())));
+        assertFalse("Did not match", match.isMatch());
+    }
 }
