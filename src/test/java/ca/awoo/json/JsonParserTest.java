@@ -1,5 +1,6 @@
 package ca.awoo.json;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -19,6 +20,9 @@ import ca.awoo.praser.character.CharacterStream;
 public class JsonParserTest{
     /**
      * Tests that the parser can parse a string.
+     * <p>
+     * Test string: <code>"hello"</code>
+     * </p>
      * @throws Exception if an error occurs
      */
     @Test
@@ -30,6 +34,9 @@ public class JsonParserTest{
 
     /**
      * Tests that the parser can parse a number.
+     * <p>
+     * Test string: <code>76</code>
+     * </p>
      * @throws Exception if an error occurs
      */
     @Test
@@ -41,6 +48,9 @@ public class JsonParserTest{
 
     /**
      * Tests that the parser can parse a boolean.
+     * <p>
+     * Test string: <code>true</code>
+     * </p>
      * @throws Exception if an error occurs
      */
     @Test
@@ -52,6 +62,9 @@ public class JsonParserTest{
 
     /**
      * Tests that the parser can parse an array.
+     * <p>
+     * Test string: <code>[1,2,3]</code>
+     * </p>
      * @throws Exception if an error occurs
      */
     @Test
@@ -67,6 +80,9 @@ public class JsonParserTest{
 
     /**
      * Tests that the parser can parse an object.
+     * <p>
+     * Test string: <code>{"hello": "world"}</code>
+     * </p>
      * @throws Exception if an error occurs
      */
     @Test
@@ -78,6 +94,9 @@ public class JsonParserTest{
 
     /**
      * Tests that the parser can parse an empty array.
+     * <p>
+     * Test string: <code>{"attachments": []}</code>
+     * </p>
      * @throws Exception if an error occurs
      * @since 0.0.2
      */
@@ -89,10 +108,51 @@ public class JsonParserTest{
         assertTrue("Matched on object", match.value instanceof JsonObject);
     }
 
+    /**
+     * Tests that the parser cannot parse an array with bogus in it.
+     * <p>
+     * Test string: <code>{"attachments": [bogus]}</code>
+     * </p>
+     * @throws Exception
+     */
     @Test
     public void testBogusArray() throws Exception {
         JsonParser parser = new JsonParser();
         Match<JsonValue<?>> match = parser.parse(new CharacterStream(new ByteArrayInputStream("{\"attachments\": [bogus]}".getBytes())));
         assertFalse("Did not match", match.isMatch());
+    }
+
+    /**
+     * Tests that the parser can parse an empty object.
+     * <p>
+     * Test string: <code>{}</code>
+     * </p>
+     * @throws Exception
+     */
+    @Test
+    public void testEmptyObject() throws Exception {
+        JsonParser parser = new JsonParser();
+        Match<JsonValue<?>> match = parser.parse(new CharacterStream(new ByteArrayInputStream("{}".getBytes())));
+        assertTrue("Did match", match.isMatch());
+        assertTrue("Matched on object", match.value instanceof JsonObject);
+        JsonObject object = (JsonObject) match.value;
+        assertEquals("Object is empty", 0, object.getValue().size());
+    }
+
+    /**
+     * Tests that the parser can parse an empty object with whitespace.
+     * <p>
+     * Test string: <code>{  \n}</code>
+     * </p>
+     * @throws Exception
+     */
+    @Test
+    public void testEmptyObjectWhitespace() throws Exception {
+        JsonParser parser = new JsonParser();
+        Match<JsonValue<?>> match = parser.parse(new CharacterStream(new ByteArrayInputStream("{  \n}".getBytes())));
+        assertTrue("Did match", match.isMatch());
+        assertTrue("Matched on object", match.value instanceof JsonObject);
+        JsonObject object = (JsonObject) match.value;
+        assertEquals("Object is empty", 0, object.getValue().size());
     }
 }
