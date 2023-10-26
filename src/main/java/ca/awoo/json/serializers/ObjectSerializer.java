@@ -81,15 +81,19 @@ public class ObjectSerializer implements Serializer<Object> {
             try {
                 Object instance = clazz.newInstance();
                 Field[] fields = clazz.getDeclaredFields();
+                //Iterate over all fields in the class
                 for(Field field : fields){
+                    //Skip synthetic and transient fields
                     if(field.isSynthetic() || Modifier.isTransient(field.getModifiers())){
                         continue;
                     }
+                    //Make the field accessible
                     field.setAccessible(true);
                     try{
+                        //Set the field to the deserialized value
                         field.set(instance, this.json.fromJsonValue(obj.get(field.getName()), field.getType()));
                     }catch(JsonDeserializationException e){
-                        throw new JsonDeserializationException(json, "Error deserializing field " + field.getName(), e);
+                        throw new JsonDeserializationException(json, "Error deserializing field " + field.getName() + " in class " + clazz.getName(), e);
                     }
                 }
                 return instance;
