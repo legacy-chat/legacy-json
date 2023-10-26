@@ -42,6 +42,9 @@ public abstract class JsonValue<T> {
      * This should always be valid JSON.
      */
     public String toString() {
+        if(value == null) {
+            return "null";
+        }
         return value.toString();
     }
 }
