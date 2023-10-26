@@ -31,6 +31,9 @@ public class StringSerializer implements Serializer<String> {
      * @throws JsonDeserializationException if the {@link JsonValue} is not a {@link JsonString}.
      */
     public String deserialize(JsonValue<?> json, Class<? extends String> clazz) throws JsonDeserializationException {
+        if(json == null){
+            throw new JsonDeserializationException(json, "Expected JsonString, got null");
+        }
         if(!(json instanceof JsonString)){
             throw new JsonDeserializationException(json, "Expected JsonString, got " + json.getClass().getSimpleName());
         }else{

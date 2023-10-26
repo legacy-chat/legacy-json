@@ -34,6 +34,9 @@ public class FloatSerializer implements Serializer<Float> {
      * @throws JsonDeserializationException if the {@link JsonValue} is not a {@link JsonNumber}.
      */
     public Float deserialize(JsonValue<?> json, Class<? extends Float> clazz) throws JsonDeserializationException {
+        if(json == null){
+            throw new JsonDeserializationException(json, "Expected JsonNumber, got null");
+        }
         if(!(json instanceof JsonNumber)){
             throw new JsonDeserializationException(json, "Expected JsonNumber, got " + json.getClass().getSimpleName());
         }else{

@@ -48,6 +48,9 @@ public class ArraySerializer implements Serializer<Object>{
 
     public Object deserialize(JsonValue<?> json, Class<? extends Object> clazz)
             throws JsonDeserializationException {
+        if(json == null){
+            throw new JsonDeserializationException(json, "Expected JsonArray, got null");
+        }
         if(!(json instanceof JsonArray)){
             throw new JsonDeserializationException(json, "Expected JsonArray, got " + json.getClass().getSimpleName());
         }else{

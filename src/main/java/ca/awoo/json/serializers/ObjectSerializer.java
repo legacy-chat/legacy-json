@@ -71,6 +71,9 @@ public class ObjectSerializer implements Serializer<Object> {
      * @throws JsonDeserializationException if the {@link JsonValue} could not be deserialized.
      */
     public Object deserialize(JsonValue<?> json, Class<? extends Object> clazz) throws JsonDeserializationException {
+        if(json == null){
+            throw new JsonDeserializationException(json, "Expected JsonObject, got null");
+        }
         if(!(json instanceof JsonObject)){
             throw new JsonDeserializationException(json, "Expected JsonObject, got " + json.getClass().getSimpleName());
         }else{

@@ -35,6 +35,9 @@ public class CharacterSerializer implements Serializer<Character>{
      */
     public Character deserialize(JsonValue<?> json, Class<? extends Character> clazz)
             throws JsonDeserializationException {
+        if(json == null){
+            throw new JsonDeserializationException(json, "Expected JsonString, got null");
+        }
         if(!(json instanceof JsonString)){
             throw new JsonDeserializationException(json, "Expected JsonString, got " + json.getClass().getSimpleName());
         }else{

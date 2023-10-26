@@ -31,6 +31,9 @@ public class BooleanSerializer implements Serializer<Boolean> {
      * @throws JsonDeserializationException if the {@link JsonValue} is not a {@link JsonBoolean}.
      */
     public Boolean deserialize(JsonValue<?> json, Class<? extends Boolean> clazz) throws JsonDeserializationException {
+        if(json == null){
+            throw new JsonDeserializationException(json, "Expected JsonBoolean, got null");
+        }
         if(!(json instanceof JsonBoolean)){
             throw new JsonDeserializationException(json, "Expected JsonBoolean, got " + json.getClass().getSimpleName());
         }else{

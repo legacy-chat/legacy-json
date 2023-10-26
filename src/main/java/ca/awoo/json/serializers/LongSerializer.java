@@ -34,6 +34,9 @@ public class LongSerializer implements Serializer<Long> {
      * @throws JsonDeserializationException if the {@link JsonValue} is not a {@link JsonNumber}.
      */
     public Long deserialize(JsonValue<?> json, Class<? extends Long> clazz) throws JsonDeserializationException {
+        if(json == null){
+            throw new JsonDeserializationException(json, "Expected JsonNumber, got null");
+        }
         if(!(json instanceof JsonNumber)){
             throw new JsonDeserializationException(json, "Expected JsonNumber, got " + json.getClass().getSimpleName());
         }else{

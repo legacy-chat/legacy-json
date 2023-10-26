@@ -34,6 +34,9 @@ public class DoubleSerializer implements Serializer<Double> {
      * @throws JsonDeserializationException if the {@link JsonValue} is not a {@link JsonNumber}.
      */
     public Double deserialize(JsonValue<?> json, Class<? extends Double> clazz) throws JsonDeserializationException {
+        if(json == null){
+            throw new JsonDeserializationException(json, "Expected JsonNumber, got null");
+        }
         if(!(json instanceof JsonNumber)){
             throw new JsonDeserializationException(json, "Expected JsonNumber, got " + json.getClass().getSimpleName());
         }else{
