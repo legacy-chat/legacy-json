@@ -33,4 +33,14 @@ public class EmptyObjectTest {
         JsonObject object = (JsonObject) match.value;
         assertEquals("Object is empty", 0, object.getValue().size());
     }
+
+    @Test
+    public void testEmptyObjectWhitespace() throws Exception {
+        JsonParser parser = new JsonParser();
+        Match<JsonValue<?>> match = parser.parse(new CharacterStream(new ByteArrayInputStream("{  \n}".getBytes())));
+        assertTrue("Did match", match.isMatch());
+        assertTrue("Matched on object", match.value instanceof JsonObject);
+        JsonObject object = (JsonObject) match.value;
+        assertEquals("Object is empty", 0, object.getValue().size());
+    }
 }

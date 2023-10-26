@@ -27,12 +27,14 @@ public class JsonObjectParser extends Parser<Character, JsonValue<?>> {
         }
         int i = 1;
         JsonObject jsonObject = new JsonObject();
+        Match<String> whitespaceMatch = whitespaceParser.parse(input, offset + i);
+        i += whitespaceMatch.length;
         //Handle empty object
         if(closeBrace.parse(input, offset + i).isMatch()){
             return new Match<JsonValue<?>>(jsonObject, i + 1);
         }
         while(true){
-            Match<String> whitespaceMatch = whitespaceParser.parse(input, offset + i);
+            whitespaceMatch = whitespaceParser.parse(input, offset + i);
             i += whitespaceMatch.length;
             //Get key
             Match<JsonValue<?>> stringMatch = stringParser.parse(input, offset + i);
