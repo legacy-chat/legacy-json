@@ -2,11 +2,14 @@ package ca.awoo.json.serializers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 
+import ca.awoo.fwoabl.Optional;
 import ca.awoo.json.Json;
 import ca.awoo.json.JsonDeserializationException;
 import ca.awoo.json.JsonSerializationException;
 import ca.awoo.json.Serializer;
+import ca.awoo.json.types.JsonNull;
 import ca.awoo.json.types.JsonObject;
 import ca.awoo.json.types.JsonValue;
 
@@ -42,6 +45,9 @@ public class ObjectSerializer implements Serializer<Object> {
      * @throws JsonSerializationException if the object could not be serialized.
      */
     public JsonValue<?> serialize(Object obj, Class<? extends Object> clazz) throws JsonSerializationException {
+        if(obj == null){
+            return JsonNull.INSTANCE;
+        }
         JsonObject json = new JsonObject();
         Field[] fields = clazz.getDeclaredFields();
         for(Field field : fields){
@@ -50,10 +56,18 @@ public class ObjectSerializer implements Serializer<Object> {
             }
             field.setAccessible(true);
             try {
-                if(field.get(obj).equals(obj)){
+                Object value = field.get(obj);
+                if(value.equals(obj)){
                     throw new JsonSerializationException(obj, "Cannot serialize object with circular reference");
                 }
-                json.put(field.getName(), this.json.toJsonValue(field.get(obj), field.getType()));
+                if(Optional.class.isAssignableFrom(field.getType())){
+                    Optional<?> optional = (Optional<?>)value;
+                    if(optional.isSome()){
+                        json.put(field.getName(), this.json.toJsonValue(optional.get(), optional.get().getClass()));
+                    }
+                }else{
+                    json.put(field.getName(), this.json.toJsonValue(field.get(obj), field.getType()));
+                }
             } catch (IllegalArgumentException e) {
                 throw new JsonSerializationException(obj, "Error serializing field " + field.getName(), e);
             } catch (IllegalAccessException e) {
@@ -75,7 +89,7 @@ public class ObjectSerializer implements Serializer<Object> {
             throw new JsonDeserializationException(json, "Expected JsonObject, got null");
         }
         if(!(json instanceof JsonObject)){
-            throw new JsonDeserializationException(json, "Expected JsonObject, got " + json.getClass().getSimpleName());
+            throw new JsonDeserializationException(json, "Expected JsonObject for " + clazz.getName() + ", got " + json.getClass().getSimpleName());
         }else{
             JsonObject obj = (JsonObject)json;
             try {
@@ -89,11 +103,28 @@ public class ObjectSerializer implements Serializer<Object> {
                     }
                     //Make the field accessible
                     field.setAccessible(true);
-                    try{
-                        //Set the field to the deserialized value
-                        field.set(instance, this.json.fromJsonValue(obj.get(field.getName()), field.getType()));
-                    }catch(JsonDeserializationException e){
-                        throw new JsonDeserializationException(json, "Error deserializing field " + field.getName() + " in class " + clazz.getName(), e);
+                    if(Optional.class.isAssignableFrom(field.getType())){
+                        if(obj.getValue().containsKey(field.getName())){
+                            //If the field is an optional and the value is present, deserialize the value
+                            ParameterizedType type = (ParameterizedType)field.getGenericType();
+                            Class<?> optionalType = (Class<?>)type.getActualTypeArguments()[0];
+                            field.set(instance, Optional.some(this.json.fromJsonValue(obj.get(field.getName()), optionalType)));
+                        }else{
+                            //If the field is an optional and the value is not present, set the field to none
+                            field.set(instance, Optional.none(field.getType().getTypeParameters()[0].getClass()));
+                        }
+                    } else{
+                        //If the field is not an optional, deserialize the value
+                        if(obj.getValue().containsKey(field.getName())){
+                            try{
+                                field.set(instance, this.json.fromJsonValue(obj.get(field.getName()), field.getType()));
+                            } catch(JsonDeserializationException e){
+                                throw new JsonDeserializationException(json, "Error deserializing field " + field.getName() + " in class " + clazz.getName(), e);
+                            }
+                        } else {
+                            //If the field is not an optional and the value is not present, throw an exception
+                            throw new JsonDeserializationException(json, "Expected field " + field.getName() + " in class " + clazz.getName());
+                        }
                     }
                 }
                 return instance;
