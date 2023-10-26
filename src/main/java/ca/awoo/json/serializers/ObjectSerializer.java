@@ -86,7 +86,11 @@ public class ObjectSerializer implements Serializer<Object> {
                         continue;
                     }
                     field.setAccessible(true);
-                    field.set(instance, this.json.fromJsonValue(obj.get(field.getName()), field.getType()));
+                    try{
+                        field.set(instance, this.json.fromJsonValue(obj.get(field.getName()), field.getType()));
+                    }catch(JsonDeserializationException e){
+                        throw new JsonDeserializationException(json, "Error deserializing field " + field.getName(), e);
+                    }
                 }
                 return instance;
             } catch (InstantiationException e) {

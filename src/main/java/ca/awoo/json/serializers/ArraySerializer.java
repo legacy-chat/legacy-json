@@ -57,7 +57,11 @@ public class ArraySerializer implements Serializer<Object>{
             JsonArray array = (JsonArray)json;
             Object obj = Array.newInstance(clazz.getComponentType(), array.getValue().size());
             for(int i = 0; i < array.getValue().size(); i++){
-                Array.set(obj, i, this.json.fromJsonValue(array.getValue().get(i), clazz.getComponentType()));
+                try{
+                    Array.set(obj, i, this.json.fromJsonValue(array.getValue().get(i), clazz.getComponentType()));
+                }catch(JsonDeserializationException e){
+                    throw new JsonDeserializationException(json, "Error deserializing array element " + i, e);
+                }
             }
             return obj;
         }
