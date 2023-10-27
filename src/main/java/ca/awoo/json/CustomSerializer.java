@@ -15,6 +15,17 @@ import ca.awoo.json.types.JsonValue;
  * @see InterfaceSerializer
  */
 public interface CustomSerializer {
-    public JsonValue<?> serialize();
-    public void deserialize(JsonValue<?> json);
+    /**
+     * Serializes the object into a {@link JsonValue}.
+     * @return The serialized object.
+     * @throws JsonSerializationException If the object could not be serialized.
+     */
+    public JsonValue<?> serialize() throws JsonSerializationException;
+    
+    /**
+     * Deserializes the object from a {@link JsonValue}.
+     * @param json The {@link JsonValue} to deserialize from.
+     * @throws JsonDeserializationException If the object could not be deserialized.
+     */
+    public void deserialize(JsonValue<?> json) throws JsonDeserializationException;
 }
